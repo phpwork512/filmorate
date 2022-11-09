@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.models.Film;
 import ru.yandex.practicum.filmorate.models.User;
+import ru.yandex.practicum.filmorate.validators.UserValidator;
 
 import javax.validation.*;
 import java.time.LocalDate;
@@ -29,7 +30,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<User> create(@RequestBody User user) {
         try {
-            validateUser(user);
+            UserValidator.validate(user);
 
             //имя для отображения может быть пустым — в таком случае будет использован логин;
             String name = user.getName();
@@ -52,7 +53,7 @@ public class UserController {
     @PutMapping
     public ResponseEntity<User> update(@RequestBody User user) {
         try {
-            validateUser(user);
+            UserValidator.validate(user);
 
             //имя для отображения может быть пустым — в таком случае будет использован логин;
             String name = user.getName();
@@ -80,45 +81,6 @@ public class UserController {
         } catch (ValidationException|NullPointerException|IllegalArgumentException e) {
             log.info(e.getMessage());
             return new ResponseEntity<>(user, HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    /**
-     * метод служит для валидации данных пользователя
-     * @param user объект для проверки
-     * @throws ValidationException в случае если валидация неуспешна
-     */
-    private void validateUser(User user) throws ValidationException, IllegalArgumentException {
-
-        Set<ConstraintViolation<User>> violations = Validation.buildDefaultValidatorFactory().getValidator().validate(user);
-        if (violations.size() > 0) {
-            List<String> errors = new ArrayList<>();
-            for (ConstraintViolation<User> violation : violations) {
-                errors.add("Поле " + violation.getPropertyPath().toString() + " " + violation.getMessage());
-            }
-            throw new ValidationException(String.join("\n", errors));
-        }
-
-        String email = user.getEmail();
-        String login = user.getLogin();
-        LocalDate birthday = user.getBirthday();
-
-        if ( email == null
-            || email.isBlank()
-            || !email.contains("@")
-            || email.indexOf("@") != email.lastIndexOf("@") ) {
-            throw new ValidationException("Электронная почта не может быть пустой и должна содержать один символ @");
-        }
-
-        if ( login == null
-            || login.isBlank()
-            || login.contains(" ") ) {
-            throw new ValidationException("Логин не может быть пустым и содержать пробелы");
-        }
-
-        if ( birthday == null
-            || user.getBirthday().isAfter(LocalDate.now()) ) {
-            throw new ValidationException("Дата рождения не может быть в будущем");
         }
     }
 }

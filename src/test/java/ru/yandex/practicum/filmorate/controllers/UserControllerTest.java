@@ -13,7 +13,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserControllerTest {
-    UserController userController;
+    private UserController userController;
 
     @BeforeEach
     void beforeEach() {
@@ -143,21 +143,6 @@ class UserControllerTest {
         assertEquals(HttpStatus.BAD_REQUEST, createdEntity.getStatusCode());
         assertNull(createdEntity.getBody());
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     //обновить в контроллере объект с валидными полями
     //эндпоинт PUT /users

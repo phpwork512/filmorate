@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FilmControllerTest {
 
-    FilmController filmController;
+    private FilmController filmController;
 
     @BeforeEach
     void beforeEach() {
