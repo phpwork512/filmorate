@@ -1,11 +1,16 @@
 package ru.yandex.practicum.filmorate.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -31,6 +36,10 @@ public class User {
     @Past(message = "Дата рождения должна быть в прошлом")
     @NotNull
     private LocalDate birthday;
+
+    /** набор id друзей пользователя */
+    @JsonIgnore
+    private final Set<Integer> friendIdSet = new HashSet<>();
 
     public User(String email, String login, String name, LocalDate birthday) {
         this.email = email;
