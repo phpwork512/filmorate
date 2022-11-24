@@ -26,6 +26,7 @@ public class FilmService {
 
     /**
      * добавить id пользователя в набор лайкнувших фильм пользователей
+     *
      * @param filmId id фильма
      * @param userId id пользователя
      */
@@ -45,6 +46,7 @@ public class FilmService {
 
     /**
      * удалить id пользователя из набора лайкнувших фильм пользователей
+     *
      * @param filmId объект типа Film
      * @param userId объект типа User
      */
@@ -64,6 +66,7 @@ public class FilmService {
 
     /**
      * вернуть топ N фильмов по количеству лайков
+     *
      * @param count количество фильмов в списке, если не указано или меньше 1 - то берется 10
      * @return список фильмов с самым большим количеством лайков
      */
@@ -80,6 +83,7 @@ public class FilmService {
 
     /**
      * получить список всех фильмов
+     *
      * @return список объектов Film
      */
     public List<Film> getAll() {
@@ -88,6 +92,7 @@ public class FilmService {
 
     /**
      * получить данные фильма по его ID
+     *
      * @param filmId ID фильма
      * @return объект типа Film или null если такой ID не найден
      */
@@ -97,6 +102,7 @@ public class FilmService {
 
     /**
      * создать запись фильма в хранилище, присвоить уникальный id
+     *
      * @param film заполненный объект типа Film (кроме поля id)
      * @return заполненный объект типа Film
      */
@@ -106,6 +112,7 @@ public class FilmService {
 
     /**
      * обновить запись фильма в хранилище, поиск по id
+     *
      * @param film заполненный объект типа Film
      * @return заполненный объект типа Film
      */

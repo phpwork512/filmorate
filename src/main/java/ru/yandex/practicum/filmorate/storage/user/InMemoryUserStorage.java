@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class InMemoryUserStorage implements UserStorage{
+public class InMemoryUserStorage implements UserStorage {
     /**
      * Map для хранения данных
      */
@@ -23,6 +23,7 @@ public class InMemoryUserStorage implements UserStorage{
 
     /**
      * получить данные пользователя по его ID
+     *
      * @param id ID пользователя
      * @return объект типа User или null если такой ID не найден
      */
@@ -33,6 +34,7 @@ public class InMemoryUserStorage implements UserStorage{
 
     /**
      * получить список всех пользователей
+     *
      * @return список объектов User
      */
     @Override
@@ -42,6 +44,7 @@ public class InMemoryUserStorage implements UserStorage{
 
     /**
      * создать запись пользователя в хранилище, присвоить уникальный id
+     *
      * @param user заполненный объект типа User (кроме поля id)
      * @return заполненный объект типа User
      */
@@ -54,6 +57,7 @@ public class InMemoryUserStorage implements UserStorage{
 
     /**
      * обновить запись пользователя в хранилище, поиск по id
+     *
      * @param user заполненный объект типа User
      * @return заполненный объект типа User или null если такого пользователя нет в хранилище
      */
@@ -62,11 +66,11 @@ public class InMemoryUserStorage implements UserStorage{
         int userId = user.getId();
 
         if (users.containsKey(userId)) {
-            users.remove(userId);
+            //заменяя объект в хранилище на обновлённый сохраняем старый набор лайков
+            user.setFriendIdSet(users.get(userId).getFriendIdSet());
             users.put(userId, user);
             return user;
-        }
-        else {
+        } else {
             return null;
         }
 
@@ -75,6 +79,7 @@ public class InMemoryUserStorage implements UserStorage{
     /**
      * Очистить хранилище
      */
+    @Override
     public void clearAll() {
         users.clear();
         newId = 0;

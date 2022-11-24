@@ -43,11 +43,11 @@ public class InMemoryFilmStorage implements FilmStorage {
         int filmId = film.getId();
 
         if (films.containsKey(filmId)) {
-            films.remove(filmId);
+            //заменяя объект в хранилище на обновлённый сохраняем старый набор лайков
+            film.setLikedUserIdSet(films.get(filmId).getLikedUserIdSet());
             films.put(filmId, film);
             return film;
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -55,6 +55,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     /**
      * Очистить хранилище
      */
+    @Override
     public void clearAll() {
         films.clear();
         newId = 0;

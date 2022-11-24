@@ -13,6 +13,7 @@ import java.util.Set;
 public class UserValidator {
     /**
      * метод служит для валидации данных пользователя
+     *
      * @param user объект для проверки
      * @throws ValidationException в случае если валидация неуспешна
      */

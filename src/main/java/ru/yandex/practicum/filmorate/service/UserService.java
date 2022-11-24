@@ -26,6 +26,7 @@ public class UserService {
     /**
      * Добавить пользователя себе в друзья.
      * Операция взаимная, то есть если Лена стала другом Саши, то это значит, что Саша теперь друг Лены.
+     *
      * @param personId id пользователя, кто добавляет в свой список друзей
      * @param friendId id пользователя, кого добавляют
      */
@@ -51,6 +52,7 @@ public class UserService {
     /**
      * Удалить пользователя из друзей.
      * Операция взаимная, то есть если Лена перестала быть другом Саши, то это значит, что Саша теперь не друг Лены.
+     *
      * @param personId id пользователя, кто удаляет
      * @param friendId id пользователя, кого добавляют
      */
@@ -71,6 +73,7 @@ public class UserService {
 
     /**
      * вернуть список друзей пользователя
+     *
      * @param userId id пользователя
      * @return список друзей в виде объектов типа User
      */
@@ -81,7 +84,7 @@ public class UserService {
         }
 
         List<User> friendsList = new ArrayList<>();
-        for(Integer friendId : user.getFriendIdSet()) {
+        for (Integer friendId : user.getFriendIdSet()) {
             User friend = userStorage.getById(friendId);
             if (friend != null) friendsList.add(friend);
         }
@@ -91,6 +94,7 @@ public class UserService {
 
     /**
      * Отдать список общих друзей двух пользователей
+     *
      * @param userId1 id пользователя 1
      * @param userId2 id пользователя 2
      * @return список объектов типа User, которые являются общими друзьями заданных пользователей
@@ -113,7 +117,7 @@ public class UserService {
         intersection.retainAll(friendIdList2);
 
         List<User> mutualFriends = new ArrayList<>();
-        for(Integer mutualId : intersection) {
+        for (Integer mutualId : intersection) {
             User mutualUser = userStorage.getById(mutualId);
             if (mutualUser != null) mutualFriends.add(mutualUser);
         }
@@ -123,6 +127,7 @@ public class UserService {
 
     /**
      * получить список всех пользователей
+     *
      * @return список объектов User
      */
     public List<User> getAll() {
@@ -131,6 +136,7 @@ public class UserService {
 
     /**
      * получить данные пользователя по его ID
+     *
      * @param userId ID пользователя
      * @return объект типа User или null если такой ID не найден
      */
@@ -140,6 +146,7 @@ public class UserService {
 
     /**
      * создать запись пользователя в хранилище, присвоить уникальный id
+     *
      * @param user заполненный объект типа User (кроме поля id)
      * @return заполненный объект типа User
      */
@@ -149,6 +156,7 @@ public class UserService {
 
     /**
      * обновить запись пользователя в хранилище, поиск по id
+     *
      * @param user заполненный объект типа User
      * @return заполненный объект типа User
      */

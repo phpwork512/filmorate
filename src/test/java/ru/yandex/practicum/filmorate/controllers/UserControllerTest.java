@@ -32,8 +32,7 @@ class UserControllerTest {
     private UserStorage userStorage;
 
     @AfterEach
-    private void resetStorage ()
-    {
+    private void resetStorage() {
         userStorage.clearAll();
     }
 
@@ -43,8 +42,8 @@ class UserControllerTest {
     void getAllUsers() throws Exception {
         User user = new User("aa@mm.ru", "a", "b", LocalDate.now().minusYears(18));
         mvc.perform(post("/users")
-                .content(objectMapper.writeValueAsString(user))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .content(objectMapper.writeValueAsString(user))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
         user.setId(1);
@@ -85,7 +84,7 @@ class UserControllerTest {
     //сохранить в контроллере объект с e-mail без @
     //эндпоинт POST /users
     @Test
-    void createWithEmailWithoutAt() throws Exception{
+    void createWithEmailWithoutAt() throws Exception {
         User user = new User("aaa?bb", "a", "b", LocalDate.now().minusYears(18));
         mvc.perform(post("/users")
                         .content(objectMapper.writeValueAsString(user))
@@ -98,7 +97,7 @@ class UserControllerTest {
     //сохранить в контроллере объект с e-mail с двумя @
     //эндпоинт POST /users
     @Test
-    void createWithEmailWithTwoAt() throws Exception{
+    void createWithEmailWithTwoAt() throws Exception {
         User user = new User("aa@a?b@b", "a", "b", LocalDate.now().minusYears(18));
         mvc.perform(post("/users")
                         .content(objectMapper.writeValueAsString(user))
@@ -111,7 +110,7 @@ class UserControllerTest {
     //сохранить в контроллере объект с e-mail без доменной части
     //эндпоинт POST /users
     @Test
-    void createWithEmailWithoutDomain() throws Exception{
+    void createWithEmailWithoutDomain() throws Exception {
         User user = new User("это-неправильный?эмейл@", "a", "b", LocalDate.now().minusYears(18));
         mvc.perform(post("/users")
                         .content(objectMapper.writeValueAsString(user))
@@ -124,7 +123,7 @@ class UserControllerTest {
     //сохранить в контроллере объект с пустым логином
     //эндпоинт POST /users
     @Test
-    void createWithEmptyLogin() throws Exception{
+    void createWithEmptyLogin() throws Exception {
         User user = new User("aa@mm.ru", "", "b", LocalDate.now().minusYears(18));
         mvc.perform(post("/users")
                         .content(objectMapper.writeValueAsString(user))
@@ -166,7 +165,7 @@ class UserControllerTest {
     //сохранить в контроллере объект с датой рождения в будущем
     //эндпоинт POST /users
     @Test
-    void createWithBirthdayInFuture() throws Exception{
+    void createWithBirthdayInFuture() throws Exception {
         User user = new User("aa@mm.ru", "a", "b", LocalDate.now().plusDays(1));
         mvc.perform(post("/users")
                         .content(objectMapper.writeValueAsString(user))
@@ -287,7 +286,7 @@ class UserControllerTest {
     //обновить в контроллере объект с e-mail без доменной части
     //эндпоинт PUT /users
     @Test
-    void updateWithEmailWithoutDomain() throws Exception{
+    void updateWithEmailWithoutDomain() throws Exception {
         //создание
         User user = new User("aa@mm.ru", "a", "b", LocalDate.now().minusYears(18));
         ResultActions resultActions = mvc.perform(post("/users")

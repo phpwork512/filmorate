@@ -35,6 +35,7 @@ public class FilmController {
 
     /**
      * вернуть данные по всем фильмам
+     *
      * @return список объектов типа Film
      */
     @GetMapping
@@ -44,6 +45,7 @@ public class FilmController {
 
     /**
      * вернуть данные фильма с указанным id
+     *
      * @param filmId id фильма
      * @return объект типа Film, статус OK если всё хорошо
      */
@@ -53,14 +55,14 @@ public class FilmController {
         Film film = filmService.getById(filmId);
         if (film != null) {
             return film;
-        }
-        else {
+        } else {
             throw new FilmNotFoundException("Фильм с указанным id не найден: " + filmId);
         }
     }
 
     /**
      * создает фильм, проверяет валидность полученных данных, присваивает уникальный id
+     *
      * @param film заполненный данными объект класса Film
      * @return объект класса Film, статус CREATED если всё ок
      */
@@ -75,6 +77,7 @@ public class FilmController {
 
     /**
      * обновляет фильм, проверяет валидность полученных данных
+     *
      * @param film заполненный данными объект класса Film
      * @return заполненный данными объект класса Film, статус OK если всё ок
      */
@@ -88,14 +91,14 @@ public class FilmController {
 
         if (updatedFilm != null) {
             return updatedFilm;
-        }
-        else {
+        } else {
             throw new FilmNotFoundException("Фильм с указанным id не найден: " + film.getId());
         }
     }
 
     /**
      * добавить лайк фильму от пользователя
+     *
      * @param filmId id фильма
      * @param userId id пользователя
      */
@@ -107,6 +110,7 @@ public class FilmController {
 
     /**
      * убрать лайк фильму от пользователя
+     *
      * @param filmId id фильма
      * @param userId id пользователя
      */
@@ -118,6 +122,7 @@ public class FilmController {
 
     /**
      * вернуть список из N наиболее популярных фильмов по лайкам
+     *
      * @param count количество фильмов в списке, если не указано то берется 10
      * @return список объектов типа Film
      */
@@ -130,13 +135,13 @@ public class FilmController {
     /**
      * обработка исключений ParameterValidationException, ValidationException
      * генерирует код ошибки HTTP HttpStatus.BAD_REQUEST
+     *
      * @param e исключение RuntimeException
      * @return объект ErrorResponse
      */
     @ExceptionHandler({ParameterValidationException.class, ValidationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse parameterValidationExceptionHandler(RuntimeException e)
-    {
+    public ErrorResponse parameterValidationExceptionHandler(RuntimeException e) {
         log.info(e.getMessage());
         return new ErrorResponse("error", e.getMessage());
     }
@@ -144,13 +149,13 @@ public class FilmController {
     /**
      * обработка исключения FilmNotFoundException
      * генерирует код ошибки HTTP HttpStatus.NOT_FOUND
+     *
      * @param e исключение FilmNotFoundException
      * @return объект ErrorResponse
      */
     @ExceptionHandler({FilmNotFoundException.class, UserNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse filmNotFoundExceptionHandler(RuntimeException e)
-    {
+    public ErrorResponse filmNotFoundExceptionHandler(RuntimeException e) {
         log.info(e.getMessage());
         return new ErrorResponse("error", e.getMessage());
     }
@@ -158,13 +163,13 @@ public class FilmController {
     /**
      * обработка исключений NullPointerException, IllegalArgumentException
      * генерирует код ошибки HTTP HttpStatus.INTERNAL_SERVER_ERROR
+     *
      * @param e исключение RuntimeException
      * @return объект ErrorResponse
      */
     @ExceptionHandler({NullPointerException.class, IllegalArgumentException.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse serverExceptionHandler(RuntimeException e)
-    {
+    public ErrorResponse serverExceptionHandler(RuntimeException e) {
         log.info(e.getMessage());
         return new ErrorResponse("error", e.getMessage());
     }

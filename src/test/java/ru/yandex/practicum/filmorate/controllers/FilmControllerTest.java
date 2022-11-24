@@ -32,8 +32,7 @@ class FilmControllerTest {
     private FilmStorage filmStorage;
 
     @AfterEach
-    private void resetStorage ()
-    {
+    private void resetStorage() {
         filmStorage.clearAll();
     }
 
@@ -57,7 +56,7 @@ class FilmControllerTest {
     //сохранить в контроллере объект с валидными полями
     //эндпоинт POST /films
     @Test
-    void createValid() throws Exception{
+    void createValid() throws Exception {
         Film film = new Film("a", "b", LocalDate.now().minusYears(1), 99);
         ResultActions resultActions = mvc.perform(post("/films")
                         .content(objectMapper.writeValueAsString(film))
@@ -112,7 +111,7 @@ class FilmControllerTest {
     //эндпоинт POST /films
     @Test
     void createReleaseDateBefore_28_12_1895() throws Exception {
-        Film film = new Film("a", "b", LocalDate.of(1895, 12,27), 99);
+        Film film = new Film("a", "b", LocalDate.of(1895, 12, 27), 99);
         mvc.perform(post("/films")
                         .content(objectMapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -125,7 +124,7 @@ class FilmControllerTest {
     //эндпоинт POST /films
     @Test
     void createReleaseDateEquals_28_12_1895() throws Exception {
-        Film film = new Film("a", "b", LocalDate.of(1895, 12,28), 99);
+        Film film = new Film("a", "b", LocalDate.of(1895, 12, 28), 99);
         ResultActions resultActions = mvc.perform(post("/films")
                         .content(objectMapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -283,7 +282,7 @@ class FilmControllerTest {
         resultActions.andExpect(content().json(objectMapper.writeValueAsString(film)));
 
         //обновить
-        film.setReleaseDate(LocalDate.of(1895, 12,27));
+        film.setReleaseDate(LocalDate.of(1895, 12, 27));
         mvc.perform(put("/films")
                         .content(objectMapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -307,7 +306,7 @@ class FilmControllerTest {
         resultActions.andExpect(content().json(objectMapper.writeValueAsString(film)));
 
         //обновить
-        film.setReleaseDate(LocalDate.of(1895, 12,28));
+        film.setReleaseDate(LocalDate.of(1895, 12, 28));
         mvc.perform(put("/films")
                         .content(objectMapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -393,7 +392,7 @@ class FilmControllerTest {
     //обновление с неверным id
     //эндпоинт PUT /films
     @Test
-    void updateWithWrongId() throws Exception{
+    void updateWithWrongId() throws Exception {
         //создать
         Film film = new Film("a", "b", LocalDate.now().minusYears(1), 99);
 

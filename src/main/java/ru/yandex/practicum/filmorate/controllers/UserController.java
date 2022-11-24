@@ -34,6 +34,7 @@ public class UserController {
 
     /**
      * вернуть данные по всем пользователям
+     *
      * @return список объектов типа User
      */
     @GetMapping
@@ -43,6 +44,7 @@ public class UserController {
 
     /**
      * вернуть данные пользователя с указанным id
+     *
      * @param userId id пользователя
      * @return объект типа User, статус OK если всё хорошо, статус NOT_FOUND если такого пользователя нет
      */
@@ -52,14 +54,14 @@ public class UserController {
         User user = userService.getById(userId);
         if (user != null) {
             return user;
-        }
-        else {
+        } else {
             throw new UserNotFoundException("Пользователь с указанным id не найден: " + userId);
         }
     }
 
     /**
      * создает пользователя, проверяет валидность полученных данных, присваивает уникальный id
+     *
      * @param user заполненный данными объект класса User
      * @return объект класса user, статус либо CREATED если всё ок, либо BAD_REQUEST если есть ошибки в данных
      */
@@ -78,6 +80,7 @@ public class UserController {
 
     /**
      * обновляет пользователя, проверяет валидность полученных данных
+     *
      * @param user заполненный данными объект класса User
      * @return заполненный данными объект класса User, статус OK если всё ок
      */
@@ -94,15 +97,15 @@ public class UserController {
         User updatedUser = userService.update(user);
         if (updatedUser != null) {
             return updatedUser;
-        }
-        else {
+        } else {
             throw new UserNotFoundException("Пользователь с указанным id не найден: " + user.getId());
         }
     }
 
     /**
      * добавляет пользователя в друзья
-     * @param userId id пользователя кто добавляет
+     *
+     * @param userId   id пользователя кто добавляет
      * @param friendId id пользователя кого добавляют
      */
     @PutMapping("/{userId}/friends/{friendId}")
@@ -113,7 +116,8 @@ public class UserController {
 
     /**
      * удаляет пользователя из друзей
-     * @param userId id пользователя кто добавляет
+     *
+     * @param userId   id пользователя кто добавляет
      * @param friendId id пользователя кого добавляют
      */
     @DeleteMapping("/{userId}/friends/{friendId}")
@@ -124,6 +128,7 @@ public class UserController {
 
     /**
      * возвращает список друзей пользователя
+     *
      * @param userId id пользователя
      * @return список друзей в виде объектов типа User
      */
@@ -135,7 +140,8 @@ public class UserController {
 
     /**
      * возвращает список взаимных друзей
-     * @param userId id пользователя 1
+     *
+     * @param userId  id пользователя 1
      * @param otherId id пользователя 2
      * @return список взаимных друзей в виде объектов типа User
      */
@@ -148,13 +154,13 @@ public class UserController {
     /**
      * обработка исключений ParameterValidationException, ValidationException
      * генерирует код ошибки HTTP HttpStatus.BAD_REQUEST
+     *
      * @param e исключение RuntimeException
      * @return объект ErrorResponse
      */
     @ExceptionHandler({ParameterValidationException.class, ValidationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse parameterValidationExceptionHandler(RuntimeException e)
-    {
+    public ErrorResponse parameterValidationExceptionHandler(RuntimeException e) {
         log.info(e.getMessage());
         return new ErrorResponse("error", e.getMessage());
     }
@@ -162,13 +168,13 @@ public class UserController {
     /**
      * обработка исключения UserNotFoundException
      * генерирует код ошибки HTTP HttpStatus.NOT_FOUND
+     *
      * @param e исключение UserNotFoundException
      * @return объект ErrorResponse
      */
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse userNotFoundExceptionHandler(UserNotFoundException e)
-    {
+    public ErrorResponse userNotFoundExceptionHandler(UserNotFoundException e) {
         log.info(e.getMessage());
         return new ErrorResponse("error", e.getMessage());
     }
@@ -176,13 +182,13 @@ public class UserController {
     /**
      * обработка исключений NullPointerException, IllegalArgumentException
      * генерирует код ошибки HTTP HttpStatus.INTERNAL_SERVER_ERROR
+     *
      * @param e исключение RuntimeException
      * @return объект ErrorResponse
      */
     @ExceptionHandler({NullPointerException.class, IllegalArgumentException.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse serverExceptionHandler(RuntimeException e)
-    {
+    public ErrorResponse serverExceptionHandler(RuntimeException e) {
         log.info(e.getMessage());
         return new ErrorResponse("error", e.getMessage());
     }

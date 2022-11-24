@@ -15,27 +15,39 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Film {
-    /** целочисленный идентификатор */
+    /**
+     * целочисленный идентификатор
+     */
     private int id;
 
-    /** название */
-    @NotBlank (message = "Название фильма не может быть пустым")
+    /**
+     * название
+     */
+    @NotBlank(message = "Название фильма не может быть пустым")
     private String name;
 
-    /** описание */
+    /**
+     * описание
+     */
     @NotNull
     @Size(min = 0, max = 200, message = "Максимальная длина описания фильма — 200 символов")
     private String description;
 
-    /** дата релиза */
+    /**
+     * дата релиза
+     */
     @NotNull
     private LocalDate releaseDate;
 
-    /** продолжительность фильма в минутах*/
+    /**
+     * продолжительность фильма в минутах
+     */
     @Positive(message = "Продолжительность фильма должна быть положительной")
     private Integer duration;
 
-    /** набор id пользователей кто лайкнул фильм */
+    /**
+     * набор id пользователей кто лайкнул фильм
+     */
     @JsonIgnore
     private Set<Integer> likedUserIdSet = new HashSet<>();
 

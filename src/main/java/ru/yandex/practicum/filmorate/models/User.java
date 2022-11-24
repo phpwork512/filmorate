@@ -16,30 +16,42 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    /** целочисленный идентификатор */
+    /**
+     * целочисленный идентификатор
+     */
     private int id;
 
-    /** электронная почта */
+    /**
+     * электронная почта
+     */
     @Email(message = "Электронная почта указана неверно")
     @NotBlank(message = "Электронная почта не может быть пустой")
     private String email;
 
-    /** логин пользователя */
+    /**
+     * логин пользователя
+     */
     @NotBlank(message = "Логин не может быть пустым")
-    @Pattern(regexp="[^ ]*", message = "Логин не может содержать пробелы")
+    @Pattern(regexp = "[^ ]*", message = "Логин не может содержать пробелы")
     private String login;
 
-    /** имя для отображения */
+    /**
+     * имя для отображения
+     */
     private String name;
 
-    /** дата рождения*/
+    /**
+     * дата рождения
+     */
     @Past(message = "Дата рождения должна быть в прошлом")
     @NotNull
     private LocalDate birthday;
 
-    /** набор id друзей пользователя */
+    /**
+     * набор id друзей пользователя
+     */
     @JsonIgnore
-    private final Set<Integer> friendIdSet = new HashSet<>();
+    private Set<Integer> friendIdSet = new HashSet<>();
 
     public User(String email, String login, String name, LocalDate birthday) {
         this.email = email;
