@@ -1,7 +1,10 @@
 # java-filmorate
 Template repository for Filmorate project.
 
-##Примеры запросов
+## Схема БД
+!(https://github.com/phpwork512/filmorate/blob/main/Filmorate%20DB%20Scheme.png?raw=true)
+
+## Примеры запросов
 1. Получить топ-10 фильмов по лайкам
 
 SELECT Films.*, COUNT(FilmLikes.FilmId) AS likes
