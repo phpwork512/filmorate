@@ -2,7 +2,7 @@
 Template repository for Filmorate project.
 
 ## Схема БД приложения Filmorate
-![Схема БД приложения Filmorate](https://github.com/phpwork512/filmorate/blob/main/Filmorate%20DB%20Scheme.png?raw=true)
+![Схема БД приложения Filmorate](https://github.com/phpwork512/filmorate/blob/main/Filmorate%20DB%20Scheme2.png?raw=true)
 
 ## Примеры запросов
 1. Получить топ-10 фильмов по лайкам
