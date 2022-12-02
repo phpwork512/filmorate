@@ -13,6 +13,7 @@ import java.util.Set;
 public class FilmValidator {
     /**
      * метод служит для валидации данных фильма
+     *
      * @param film объект для проверки
      * @throws ValidationException в случае если валидация неуспешна
      */
