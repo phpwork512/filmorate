@@ -53,10 +53,21 @@ public class User {
     @JsonIgnore
     private Set<Integer> friendIdSet = new HashSet<>();
 
+    /*
+    Добавьте статус для связи «дружба» между двумя пользователями:
+    неподтверждённая — когда один пользователь отправил запрос на добавление другого пользователя в друзья,
+    подтверждённая — когда второй пользователь согласился на добавление.
+    */
+
     public User(String email, String login, String name, LocalDate birthday) {
         this.email = email;
         this.login = login;
         this.name = name;
         this.birthday = birthday;
+    }
+
+    public User(int id, String email, String login, String name, LocalDate birthday) {
+        this(email, login, name, birthday);
+        this.id = id;
     }
 }

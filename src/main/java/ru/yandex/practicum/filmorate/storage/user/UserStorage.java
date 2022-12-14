@@ -14,6 +14,14 @@ public interface UserStorage {
     User getById(int id);
 
     /**
+     * отдать объекты с указанными в списке id
+     *
+     * @param idList список ид пользователей
+     * @return список объектов типа User
+     */
+    List<User> getByIdList(List<Integer> idList);
+
+    /**
      * Отдать все хранимые объекты в виде списка
      *
      * @return список объектов типа User
@@ -40,4 +48,20 @@ public interface UserStorage {
      * Очистить хранилище
      */
     void clearAll();
+
+    /**
+     * Метод для добавления дружбы
+     *
+     * @param user     объект типа User кому добавляем друга
+     * @param friendId id пользователя, которого добавляем в друзья
+     */
+    void addFriend(User user, int friendId);
+
+    /**
+     * Метод для удаления дружбы
+     *
+     * @param user     объект типа User кому удаляем друга
+     * @param friendId id пользователя, которого удаляем из друзей
+     */
+    void removeFriend(User user, int friendId);
 }

@@ -1,18 +1,23 @@
 package ru.yandex.practicum.filmorate.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.yandex.practicum.filmorate.models.Film;
+import ru.yandex.practicum.filmorate.models.MpaRating;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -29,7 +34,7 @@ class FilmControllerTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private FilmStorage filmStorage;
+    private @Qualifier("FilmDbStorage") FilmStorage filmStorage;
 
     @AfterEach
     private void resetStorage() {
@@ -40,30 +45,33 @@ class FilmControllerTest {
     // эндпоинт GET /films
     @Test
     void getAllFilms() throws Exception {
-        Film film = new Film("a", "b", LocalDate.now().minusYears(1), 99);
-        mvc.perform(post("/films")
+        Film film = new Film("a", "b", LocalDate.now().minusYears(1), 99, new MpaRating(1, "G"), new ArrayList<>());
+        ResultActions resultActions = mvc.perform(post("/films")
                         .content(objectMapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        film.setId(1);
-        mvc.perform(get("/films")
+        film = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), Film.class);
+
+        MvcResult mvcResult = mvc.perform(get("/films")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(List.of(film))));
+                .andExpect(content().json(objectMapper.writeValueAsString(List.of(film))))
+                .andReturn();
     }
 
     //сохранить в контроллере объект с валидными полями
     //эндпоинт POST /films
     @Test
     void createValid() throws Exception {
-        Film film = new Film("a", "b", LocalDate.now().minusYears(1), 99);
+        Film film = new Film("a", "b", LocalDate.now().minusYears(1), 99, new MpaRating(1, "G"), new ArrayList<>());
         ResultActions resultActions = mvc.perform(post("/films")
                         .content(objectMapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        film.setId(1);
+        Integer id = JsonPath.read(resultActions.andReturn().getResponse().getContentAsString(), "$.id");
+        film.setId(id);
         resultActions.andExpect(content().json(objectMapper.writeValueAsString(film)));
     }
 
@@ -71,7 +79,7 @@ class FilmControllerTest {
     //эндпоинт POST /films
     @Test
     void createEmptyName() throws Exception {
-        Film film = new Film("", "b", LocalDate.now().minusYears(1), 99);
+        Film film = new Film("", "b", LocalDate.now().minusYears(1), 99, new MpaRating(1, "G"), new ArrayList<>());
         mvc.perform(post("/films")
                         .content(objectMapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -84,7 +92,7 @@ class FilmControllerTest {
     //эндпоинт POST /films
     @Test
     void createLongDescription() throws Exception {
-        Film film = new Film("a", "b".repeat(201), LocalDate.now().minusYears(1), 99);
+        Film film = new Film("a", "b".repeat(201), LocalDate.now().minusYears(1), 99, new MpaRating(1, "G"), new ArrayList<>());
         mvc.perform(post("/films")
                         .content(objectMapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -97,13 +105,14 @@ class FilmControllerTest {
     //эндпоинт POST /films
     @Test
     void createDescription200Chars() throws Exception {
-        Film film = new Film("a", "b".repeat(200), LocalDate.now().minusYears(1), 99);
+        Film film = new Film("a", "b".repeat(200), LocalDate.now().minusYears(1), 99, new MpaRating(1, "G"), new ArrayList<>());
         ResultActions resultActions = mvc.perform(post("/films")
                         .content(objectMapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        film.setId(1);
+        Integer id = JsonPath.read(resultActions.andReturn().getResponse().getContentAsString(), "$.id");
+        film.setId(id);
         resultActions.andExpect(content().json(objectMapper.writeValueAsString(film)));
     }
 
@@ -111,7 +120,7 @@ class FilmControllerTest {
     //эндпоинт POST /films
     @Test
     void createReleaseDateBefore_28_12_1895() throws Exception {
-        Film film = new Film("a", "b", LocalDate.of(1895, 12, 27), 99);
+        Film film = new Film("a", "b", LocalDate.of(1895, 12, 27), 99, new MpaRating(1, "G"), new ArrayList<>());
         mvc.perform(post("/films")
                         .content(objectMapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -124,13 +133,14 @@ class FilmControllerTest {
     //эндпоинт POST /films
     @Test
     void createReleaseDateEquals_28_12_1895() throws Exception {
-        Film film = new Film("a", "b", LocalDate.of(1895, 12, 28), 99);
+        Film film = new Film("a", "b", LocalDate.of(1895, 12, 28), 99, new MpaRating(1, "G"), new ArrayList<>());
         ResultActions resultActions = mvc.perform(post("/films")
                         .content(objectMapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        film.setId(1);
+        Integer id = JsonPath.read(resultActions.andReturn().getResponse().getContentAsString(), "$.id");
+        film.setId(id);
         resultActions.andExpect(content().json(objectMapper.writeValueAsString(film)));
     }
 
@@ -138,7 +148,7 @@ class FilmControllerTest {
     //эндпоинт POST /films
     @Test
     void createNegativeDuration() throws Exception {
-        Film film = new Film("a", "b", LocalDate.now().minusYears(1), -1);
+        Film film = new Film("a", "b", LocalDate.now().minusYears(1), -1, new MpaRating(1, "G"), new ArrayList<>());
         mvc.perform(post("/films")
                         .content(objectMapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -151,7 +161,7 @@ class FilmControllerTest {
     //эндпоинт POST /films
     @Test
     void createZeroDuration() throws Exception {
-        Film film = new Film("a", "b", LocalDate.now().minusYears(1), 0);
+        Film film = new Film("a", "b", LocalDate.now().minusYears(1), 0, new MpaRating(1, "G"), new ArrayList<>());
         mvc.perform(post("/films")
                         .content(objectMapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -175,13 +185,14 @@ class FilmControllerTest {
     @Test
     void updateValid() throws Exception {
         //создать
-        Film film = new Film("a", "b", LocalDate.now().minusYears(1), 99);
+        Film film = new Film("a", "b", LocalDate.now().minusYears(1), 99, new MpaRating(1, "G"), new ArrayList<>());
         ResultActions resultActions = mvc.perform(post("/films")
                         .content(objectMapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        film.setId(1);
+        Integer id = JsonPath.read(resultActions.andReturn().getResponse().getContentAsString(), "$.id");
+        film.setId(id);
         resultActions.andExpect(content().json(objectMapper.writeValueAsString(film)));
 
         //обновить
@@ -201,13 +212,14 @@ class FilmControllerTest {
     @Test
     void updateEmptyName() throws Exception {
         //создать
-        Film film = new Film("a", "b", LocalDate.now().minusYears(1), 99);
+        Film film = new Film("a", "b", LocalDate.now().minusYears(1), 99, new MpaRating(1, "G"), new ArrayList<>());
         ResultActions resultActions = mvc.perform(post("/films")
                         .content(objectMapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        film.setId(1);
+        Integer id = JsonPath.read(resultActions.andReturn().getResponse().getContentAsString(), "$.id");
+        film.setId(id);
         resultActions.andExpect(content().json(objectMapper.writeValueAsString(film)));
 
         //обновить
@@ -225,13 +237,14 @@ class FilmControllerTest {
     @Test
     void updateLongDescription() throws Exception {
         //создать
-        Film film = new Film("a", "b", LocalDate.now().minusYears(1), 99);
+        Film film = new Film("a", "b", LocalDate.now().minusYears(1), 99, new MpaRating(1, "G"), new ArrayList<>());
         ResultActions resultActions = mvc.perform(post("/films")
                         .content(objectMapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        film.setId(1);
+        Integer id = JsonPath.read(resultActions.andReturn().getResponse().getContentAsString(), "$.id");
+        film.setId(id);
         resultActions.andExpect(content().json(objectMapper.writeValueAsString(film)));
 
         //обновить
@@ -249,13 +262,14 @@ class FilmControllerTest {
     @Test
     void updateDescription200Chars() throws Exception {
         //создать
-        Film film = new Film("a", "b", LocalDate.now().minusYears(1), 99);
+        Film film = new Film("a", "b", LocalDate.now().minusYears(1), 99, new MpaRating(1, "G"), new ArrayList<>());
         ResultActions resultActions = mvc.perform(post("/films")
                         .content(objectMapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        film.setId(1);
+        Integer id = JsonPath.read(resultActions.andReturn().getResponse().getContentAsString(), "$.id");
+        film.setId(id);
         resultActions.andExpect(content().json(objectMapper.writeValueAsString(film)));
 
         //обновить
@@ -272,13 +286,14 @@ class FilmControllerTest {
     @Test
     void updateReleaseDateBefore_28_12_1895() throws Exception {
         //создать
-        Film film = new Film("a", "b", LocalDate.now().minusYears(1), 99);
+        Film film = new Film("a", "b", LocalDate.now().minusYears(1), 99, new MpaRating(1, "G"), new ArrayList<>());
         ResultActions resultActions = mvc.perform(post("/films")
                         .content(objectMapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        film.setId(1);
+        Integer id = JsonPath.read(resultActions.andReturn().getResponse().getContentAsString(), "$.id");
+        film.setId(id);
         resultActions.andExpect(content().json(objectMapper.writeValueAsString(film)));
 
         //обновить
@@ -296,13 +311,14 @@ class FilmControllerTest {
     @Test
     void updateReleaseDateEquals_28_12_1895() throws Exception {
         //создать
-        Film film = new Film("a", "b", LocalDate.now().minusYears(1), 99);
+        Film film = new Film("a", "b", LocalDate.now().minusYears(1), 99, new MpaRating(1, "G"), new ArrayList<>());
         ResultActions resultActions = mvc.perform(post("/films")
                         .content(objectMapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        film.setId(1);
+        Integer id = JsonPath.read(resultActions.andReturn().getResponse().getContentAsString(), "$.id");
+        film.setId(id);
         resultActions.andExpect(content().json(objectMapper.writeValueAsString(film)));
 
         //обновить
@@ -319,13 +335,14 @@ class FilmControllerTest {
     @Test
     void updateNegativeDuration() throws Exception {
         //создать
-        Film film = new Film("a", "b", LocalDate.now().minusYears(1), 99);
+        Film film = new Film("a", "b", LocalDate.now().minusYears(1), 99, new MpaRating(1, "G"), new ArrayList<>());
         ResultActions resultActions = mvc.perform(post("/films")
                         .content(objectMapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        film.setId(1);
+        Integer id = JsonPath.read(resultActions.andReturn().getResponse().getContentAsString(), "$.id");
+        film.setId(id);
         resultActions.andExpect(content().json(objectMapper.writeValueAsString(film)));
 
         //обновить
@@ -343,13 +360,14 @@ class FilmControllerTest {
     @Test
     void updateZeroDuration() throws Exception {
         //создать
-        Film film = new Film("a", "b", LocalDate.now().minusYears(1), 99);
+        Film film = new Film("a", "b", LocalDate.now().minusYears(1), 99, new MpaRating(1, "G"), new ArrayList<>());
         ResultActions resultActions = mvc.perform(post("/films")
                         .content(objectMapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        film.setId(1);
+        Integer id = JsonPath.read(resultActions.andReturn().getResponse().getContentAsString(), "$.id");
+        film.setId(id);
         resultActions.andExpect(content().json(objectMapper.writeValueAsString(film)));
 
         //обновить
@@ -377,7 +395,7 @@ class FilmControllerTest {
     @Test
     void updateIfNotExists() throws Exception {
         //создать
-        Film film = new Film("a", "b", LocalDate.now().minusYears(1), 99);
+        Film film = new Film("a", "b", LocalDate.now().minusYears(1), 99, new MpaRating(1, "G"), new ArrayList<>());
 
         //обновить
         film.setId(1);
@@ -394,7 +412,7 @@ class FilmControllerTest {
     @Test
     void updateWithWrongId() throws Exception {
         //создать
-        Film film = new Film("a", "b", LocalDate.now().minusYears(1), 99);
+        Film film = new Film("a", "b", LocalDate.now().minusYears(1), 99, new MpaRating(1, "G"), new ArrayList<>());
 
         //обновить
         film.setId(-1);

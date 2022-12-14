@@ -1,9 +1,11 @@
 package ru.yandex.practicum.filmorate.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -29,7 +31,7 @@ class UserControllerTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private UserStorage userStorage;
+    private @Qualifier("UserDbStorage") UserStorage userStorage;
 
     @AfterEach
     private void resetStorage() {
@@ -41,12 +43,13 @@ class UserControllerTest {
     @Test
     void getAllUsers() throws Exception {
         User user = new User("aa@mm.ru", "a", "b", LocalDate.now().minusYears(18));
-        mvc.perform(post("/users")
+        ResultActions resultActions = mvc.perform(post("/users")
                         .content(objectMapper.writeValueAsString(user))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        user.setId(1);
+        Integer id = JsonPath.read(resultActions.andReturn().getResponse().getContentAsString(), "$.id");
+        user.setId(id);
         mvc.perform(get("/users")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -63,7 +66,8 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        user.setId(1);
+        Integer id = JsonPath.read(resultActions.andReturn().getResponse().getContentAsString(), "$.id");
+        user.setId(id);
         resultActions.andExpect(content().json(objectMapper.writeValueAsString(user)));
     }
 
@@ -157,7 +161,8 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        user.setId(1);
+        Integer id = JsonPath.read(resultActions.andReturn().getResponse().getContentAsString(), "$.id");
+        user.setId(id);
         user.setName(user.getLogin());
         resultActions.andExpect(content().json(objectMapper.writeValueAsString(user)));
     }
@@ -196,7 +201,8 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        user.setId(1);
+        Integer id = JsonPath.read(resultActions.andReturn().getResponse().getContentAsString(), "$.id");
+        user.setId(id);
         resultActions.andExpect(content().json(objectMapper.writeValueAsString(user)));
 
         //обновление
@@ -222,7 +228,8 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        user.setId(1);
+        Integer id = JsonPath.read(resultActions.andReturn().getResponse().getContentAsString(), "$.id");
+        user.setId(id);
         resultActions.andExpect(content().json(objectMapper.writeValueAsString(user)));
 
         //обновление
@@ -246,7 +253,8 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        user.setId(1);
+        Integer id = JsonPath.read(resultActions.andReturn().getResponse().getContentAsString(), "$.id");
+        user.setId(id);
         resultActions.andExpect(content().json(objectMapper.writeValueAsString(user)));
 
         //обновление
@@ -270,7 +278,8 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        user.setId(1);
+        Integer id = JsonPath.read(resultActions.andReturn().getResponse().getContentAsString(), "$.id");
+        user.setId(id);
         resultActions.andExpect(content().json(objectMapper.writeValueAsString(user)));
 
         //обновление
@@ -294,7 +303,8 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        user.setId(1);
+        Integer id = JsonPath.read(resultActions.andReturn().getResponse().getContentAsString(), "$.id");
+        user.setId(id);
         resultActions.andExpect(content().json(objectMapper.writeValueAsString(user)));
 
         //обновление
@@ -318,7 +328,8 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        user.setId(1);
+        Integer id = JsonPath.read(resultActions.andReturn().getResponse().getContentAsString(), "$.id");
+        user.setId(id);
         resultActions.andExpect(content().json(objectMapper.writeValueAsString(user)));
 
         //обновление
@@ -342,7 +353,8 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        user.setId(1);
+        Integer id = JsonPath.read(resultActions.andReturn().getResponse().getContentAsString(), "$.id");
+        user.setId(id);
         resultActions.andExpect(content().json(objectMapper.writeValueAsString(user)));
 
         //обновление
@@ -367,7 +379,8 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        user.setId(1);
+        Integer id = JsonPath.read(resultActions.andReturn().getResponse().getContentAsString(), "$.id");
+        user.setId(id);
         resultActions.andExpect(content().json(objectMapper.writeValueAsString(user)));
 
         //обновление
@@ -392,7 +405,8 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        user.setId(1);
+        Integer id = JsonPath.read(resultActions.andReturn().getResponse().getContentAsString(), "$.id");
+        user.setId(id);
         resultActions.andExpect(content().json(objectMapper.writeValueAsString(user)));
 
         //обновление
@@ -426,7 +440,8 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        user.setId(1);
+        Integer id = JsonPath.read(resultActions.andReturn().getResponse().getContentAsString(), "$.id");
+        user.setId(id);
         resultActions.andExpect(content().json(objectMapper.writeValueAsString(user)));
 
         //обновление
@@ -450,7 +465,8 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        user.setId(1);
+        Integer id = JsonPath.read(resultActions.andReturn().getResponse().getContentAsString(), "$.id");
+        user.setId(id);
         resultActions.andExpect(content().json(objectMapper.writeValueAsString(user)));
 
         //обновление
