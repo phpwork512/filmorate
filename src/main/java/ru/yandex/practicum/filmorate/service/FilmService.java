@@ -1,16 +1,15 @@
 package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.FilmNotFoundException;
-import ru.yandex.practicum.filmorate.exceptions.ParameterValidationException;
 import ru.yandex.practicum.filmorate.exceptions.UserNotFoundException;
 import ru.yandex.practicum.filmorate.models.Film;
 import ru.yandex.practicum.filmorate.models.User;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -19,7 +18,7 @@ public class FilmService {
     private final UserStorage userStorage;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
+    public FilmService(@Qualifier("filmDbStorage") FilmStorage filmStorage, @Qualifier("userDbStorage") UserStorage userStorage) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
     }
@@ -41,6 +40,7 @@ public class FilmService {
             throw new UserNotFoundException("Пользователь с id " + userId + " не найден");
         }
 
+        filmStorage.addLike(film, userId);
         film.getLikedUserIdSet().add(userId);
     }
 
@@ -61,6 +61,7 @@ public class FilmService {
             throw new UserNotFoundException("Пользователь с id " + userId + " не найден");
         }
 
+        filmStorage.removeLike(film, userId);
         film.getLikedUserIdSet().remove(userId);
     }
 
@@ -71,14 +72,7 @@ public class FilmService {
      * @return список фильмов с самым большим количеством лайков
      */
     public List<Film> getPopularFilms(Integer count) {
-        if (count == null || count < 1) count = 10;
-
-        List<Film> filmsSortedByLikes = filmStorage.getAll();
-        if (filmsSortedByLikes.size() < count) count = filmsSortedByLikes.size();
-
-        filmsSortedByLikes.sort(Comparator.comparingInt(film -> -1 * film.getLikedUserIdSet().size()));
-
-        return filmsSortedByLikes.subList(0, count);
+        return filmStorage.getPopularFilms(count);
     }
 
     /**

@@ -40,4 +40,28 @@ public interface FilmStorage {
      * Очистить хранилище
      */
     void clearAll();
+
+    /**
+     * добавить лайк в список лайкнувших фильм пользователей
+     *
+     * @param film   объект типа Film
+     * @param userId id пользователя
+     */
+    void addLike(Film film, int userId);
+
+    /**
+     * убрать лайк из списка лайкнувших фильм пользователей
+     *
+     * @param film   объект типа Film
+     * @param userId id пользователя
+     */
+    void removeLike(Film film, int userId);
+
+    /**
+     * вернуть топ N фильмов по количеству лайков
+     *
+     * @param count количество фильмов в списке, если не указано или меньше 1 - то берется 10
+     * @return список фильмов с самым большим количеством лайков
+     */
+    List<Film> getPopularFilms(Integer count);
 }

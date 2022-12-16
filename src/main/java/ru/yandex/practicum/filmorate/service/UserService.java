@@ -1,12 +1,11 @@
 package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import ru.yandex.practicum.filmorate.exceptions.ParameterValidationException;
 import ru.yandex.practicum.filmorate.exceptions.UserNotFoundException;
 import ru.yandex.practicum.filmorate.models.User;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.ArrayList;
@@ -19,13 +18,13 @@ public class UserService {
     private final UserStorage userStorage;
 
     @Autowired
-    public UserService(UserStorage userStorage) {
+    public UserService(@Qualifier("userDbStorage") UserStorage userStorage) {
         this.userStorage = userStorage;
     }
 
     /**
      * Добавить пользователя себе в друзья.
-     * Операция взаимная, то есть если Лена стала другом Саши, то это значит, что Саша теперь друг Лены.
+     * Операция не взаимная
      *
      * @param personId id пользователя, кто добавляет в свой список друзей
      * @param friendId id пользователя, кого добавляют
@@ -46,12 +45,12 @@ public class UserService {
         }
 
         person.getFriendIdSet().add(friend.getId());
-        friend.getFriendIdSet().add(person.getId());
+        userStorage.addFriend(person, friend.getId());
     }
 
     /**
      * Удалить пользователя из друзей.
-     * Операция взаимная, то есть если Лена перестала быть другом Саши, то это значит, что Саша теперь не друг Лены.
+     * Операция не взаимная
      *
      * @param personId id пользователя, кто удаляет
      * @param friendId id пользователя, кого добавляют
@@ -68,7 +67,7 @@ public class UserService {
         }
 
         person.getFriendIdSet().remove(friend.getId());
-        friend.getFriendIdSet().remove(person.getId());
+        userStorage.removeFriend(person, friend.getId());
     }
 
     /**
@@ -83,13 +82,7 @@ public class UserService {
             throw new UserNotFoundException("Пользователь с id " + userId + " не найден");
         }
 
-        List<User> friendsList = new ArrayList<>();
-        for (Integer friendId : user.getFriendIdSet()) {
-            User friend = userStorage.getById(friendId);
-            if (friend != null) friendsList.add(friend);
-        }
-
-        return friendsList;
+        return userStorage.getByIdList(new ArrayList<Integer>(user.getFriendIdSet()));
     }
 
     /**
@@ -116,13 +109,7 @@ public class UserService {
         Set<Integer> intersection = new HashSet<>(friendIdList1);
         intersection.retainAll(friendIdList2);
 
-        List<User> mutualFriends = new ArrayList<>();
-        for (Integer mutualId : intersection) {
-            User mutualUser = userStorage.getById(mutualId);
-            if (mutualUser != null) mutualFriends.add(mutualUser);
-        }
-
-        return mutualFriends;
+        return userStorage.getByIdList(new ArrayList<Integer>(intersection));
     }
 
     /**

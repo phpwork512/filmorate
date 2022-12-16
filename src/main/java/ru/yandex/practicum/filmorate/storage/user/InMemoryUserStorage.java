@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.models.Film;
 import ru.yandex.practicum.filmorate.models.User;
 
 import java.util.ArrayList;
@@ -30,6 +29,16 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public User getById(int id) {
         return users.get(id);
+    }
+
+    /**
+     * отдать объекты с указанными в списке id
+     *
+     * @param idList список ид пользователей
+     * @return список объектов типа User
+     */
+    public List<User> getByIdList(List<Integer> idList) {
+        return null;
     }
 
     /**
@@ -83,5 +92,25 @@ public class InMemoryUserStorage implements UserStorage {
     public void clearAll() {
         users.clear();
         newId = 0;
+    }
+
+    /**
+     * Метод для добавления дружбы
+     *
+     * @param user     объект типа User кому добавляем друга
+     * @param friendId id пользователя, которого добавляем в друзья
+     */
+    public void addFriend(User user, int friendId) {
+        user.getFriendIdSet().add(friendId);
+    }
+
+    /**
+     * Метод для удаления дружбы
+     *
+     * @param user     объект типа User кому удаляем друга
+     * @param friendId id пользователя, которого удаляем из друзей
+     */
+    public void removeFriend(User user, int friendId) {
+        user.getFriendIdSet().remove(friendId);
     }
 }

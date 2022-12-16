@@ -4,17 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class User {
     /**
      * целочисленный идентификатор
@@ -58,5 +56,10 @@ public class User {
         this.login = login;
         this.name = name;
         this.birthday = birthday;
+    }
+
+    public User(int id, String email, String login, String name, LocalDate birthday) {
+        this(email, login, name, birthday);
+        this.id = id;
     }
 }
