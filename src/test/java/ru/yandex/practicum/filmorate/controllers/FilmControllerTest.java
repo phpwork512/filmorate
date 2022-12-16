@@ -34,7 +34,7 @@ class FilmControllerTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private @Qualifier("FilmDbStorage") FilmStorage filmStorage;
+    private @Qualifier("filmDbStorage") FilmStorage filmStorage;
 
     @AfterEach
     private void resetStorage() {

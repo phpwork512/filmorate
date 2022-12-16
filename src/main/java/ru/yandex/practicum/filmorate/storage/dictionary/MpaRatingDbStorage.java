@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.dictionary;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -10,13 +11,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class MpaRatingDbStorage implements DictionaryStorage<MpaRating> {
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public MpaRatingDbStorage(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     /**
      * получить элемент справочника по его id

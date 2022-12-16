@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controllers;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,13 +16,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/mpa")
 @Slf4j
+@RequiredArgsConstructor
 public class MpaRatingController {
     private final MpaRatingService mpaRatingService;
-
-    @Autowired
-    public MpaRatingController(MpaRatingService mpaRatingService) {
-        this.mpaRatingService = mpaRatingService;
-    }
 
     /**
      * вернуть данные по всем рейтингам

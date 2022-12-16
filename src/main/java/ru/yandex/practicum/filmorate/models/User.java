@@ -4,17 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class User {
     /**
      * целочисленный идентификатор
@@ -52,12 +50,6 @@ public class User {
      */
     @JsonIgnore
     private Set<Integer> friendIdSet = new HashSet<>();
-
-    /*
-    Добавьте статус для связи «дружба» между двумя пользователями:
-    неподтверждённая — когда один пользователь отправил запрос на добавление другого пользователя в друзья,
-    подтверждённая — когда второй пользователь согласился на добавление.
-    */
 
     public User(String email, String login, String name, LocalDate birthday) {
         this.email = email;

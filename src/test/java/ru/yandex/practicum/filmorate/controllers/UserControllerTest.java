@@ -31,7 +31,7 @@ class UserControllerTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private @Qualifier("UserDbStorage") UserStorage userStorage;
+    private @Qualifier("userDbStorage") UserStorage userStorage;
 
     @AfterEach
     private void resetStorage() {

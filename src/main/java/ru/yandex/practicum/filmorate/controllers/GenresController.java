@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controllers;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,13 +16,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/genres")
 @Slf4j
+@RequiredArgsConstructor
 public class GenresController {
     private final GenreService genreService;
-
-    @Autowired
-    public GenresController(GenreService genreService) {
-        this.genreService = genreService;
-    }
 
     /**
      * вернуть данные по всем рейтингам

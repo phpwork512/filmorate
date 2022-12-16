@@ -1,21 +1,16 @@
 package ru.yandex.practicum.filmorate.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.models.MpaRating;
 import ru.yandex.practicum.filmorate.storage.dictionary.MpaRatingDbStorage;
 
-import java.sql.ResultSet;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class MpaRatingService {
     private final MpaRatingDbStorage mpaRatingDbStorage;
-
-    @Autowired
-    public MpaRatingService(MpaRatingDbStorage mpaRatingDbStorage) {
-        this.mpaRatingDbStorage = mpaRatingDbStorage;
-    }
 
     /**
      * получить элемент справочника по его id
