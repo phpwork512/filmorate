@@ -2,14 +2,7 @@
 ## Схема БД приложения Filmorate
 ![Схема БД приложения Filmorate](https://github.com/phpwork512/filmorate/blob/main/Filmorate%20DB%20Scheme2.png?raw=true)
 
-### Enum для рейтинга MPA
-Enum MPARatingEnum {
-G,
-PG,
-"PG-13",
-R,
-"NC-17"
-}
+Enum для рейтинга MPA заменен на таблицу-справочник
 
 ## Примеры запросов
 1. Получить топ-10 фильмов по лайкам
